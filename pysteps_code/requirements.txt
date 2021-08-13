@@ -1,9 +1,0 @@
-numpy
-opencv-python
-pillow
-pyproj
-scipy
-matplotlib
-jsmin
-jsonschema
-netCDF4
