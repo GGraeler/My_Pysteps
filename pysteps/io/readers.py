@@ -12,7 +12,28 @@ Module with the reader functions.
 """
 
 import numpy as np
+from multiprocessing import Pool, cpu_count
 
+def process_file(args):
+    """
+    Imports data files using multiprocessing
+    """
+    # Unpack args
+    filename, timestamp, precip_ref, quality_ref, importer, kwargs = args
+
+    # Read in data
+    if ifn is not None:
+        precip, quality, _ = importer(ifn, **kwargs)
+
+    # Set to null value if no data found
+    else:
+        precip = precip_ref * np.nan
+        if quality_ref is not None:
+            quality = quality_ref * np.nan)
+        else:
+            quality = None
+
+    return (precip, quality, timestamp)
 
 def read_timeseries(inputfns, importer, **kwargs):
     """Read a time series of input files using the methods implemented in the
@@ -55,22 +76,13 @@ def read_timeseries(inputfns, importer, **kwargs):
     if precip_ref is None:
         return None, None, None
 
-    precip = []
-    quality = []
-    timestamps = []
-    for i, ifn in enumerate(inputfns[0]):
-        if ifn is not None:
-            precip_, quality_, _ = importer(ifn, **kwargs)
-            precip.append(precip_)
-            quality.append(quality_)
-            timestamps.append(inputfns[1][i])
-        else:
-            precip.append(precip_ref * np.nan)
-            if quality_ref is not None:
-                quality.append(quality_ref * np.nan)
-            else:
-                quality.append(None)
-            timestamps.append(inputfns[1][i])
+    # Build args for mp
+    argList = [(name, time, precip_ref, quality_ref, importer, kwargs) for name, time in zip(inputfns[0], inputfns[1])]
+
+    # Read in files with mp
+    pool = Pool(processes=cpu_count())
+    precip, quality, timestamps = pool.map(process_file, argList)
+    pool.close()
 
     # Replace this with stack?
     precip = np.concatenate([precip_[None, :, :] for precip_ in precip])
