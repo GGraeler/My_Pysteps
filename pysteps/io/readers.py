@@ -22,14 +22,14 @@ def process_file(args):
     filename, timestamp, precip_ref, quality_ref, importer, kwargs = args
 
     # Read in data
-    if ifn is not None:
-        precip, quality, _ = importer(ifn, **kwargs)
+    if filename is not None:
+        precip, quality, _ = importer(filename, **kwargs)
 
     # Set to null value if no data found
     else:
         precip = precip_ref * np.nan
         if quality_ref is not None:
-            quality = quality_ref * np.nan)
+            quality = quality_ref * np.nan
         else:
             quality = None
 
@@ -61,6 +61,8 @@ def read_timeseries(inputfns, importer, **kwargs):
 
     """
 
+    print('Now with multiprocessing!')
+
     # check for missing data
     precip_ref = None
     if all(ifn is None for ifn in inputfns):
@@ -81,8 +83,16 @@ def read_timeseries(inputfns, importer, **kwargs):
 
     # Read in files with mp
     pool = Pool(processes=cpu_count())
-    precip, quality, timestamps = pool.map(process_file, argList)
+    results = pool.map(process_file, argList)
     pool.close()
+
+    # Unpack result
+    precip, quality, timestamps = [], [], []
+    for result in results:
+        p, q, t = result
+        precip.append(p)
+        quality.append(q)
+        timestamps.append(t)
 
     # Replace this with stack?
     precip = np.concatenate([precip_[None, :, :] for precip_ in precip])
