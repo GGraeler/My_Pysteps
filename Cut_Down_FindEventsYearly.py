@@ -8,7 +8,7 @@ from sendemail import email_class
 from MRMS import ldm_ingest, dataset
 
 year = 2020
-data_list = ldm_ingest(f'/usr1/home/nas-qnap/MRMS/{year}', vars='PrecipRate')
+data_list = ldm_ingest(f'/usr1/home/nas-qnap/MRMS/mrms_sw/{year}', vars='PrecipRate')
 
 for month in range(9, 11):	
 	if month == 7 or month == 8 or month == 10:
@@ -37,7 +37,7 @@ for month in range(9, 11):
 		if month < 10:
 			month = str(0)+str(month)
 
-		files = sorted(glob.glob(f'/usr1/home/nas-qnap/MRMS/{year}/{month}/{start}/*.grib2'))
+		files = sorted(glob.glob(f'/usr1/home/nas-qnap/MRMS/mrms_sw/{year}/{month}/{start}/*.grib2'))
 		
 		#Get list of DateTime values to pass to tdating
 		DateTime_List = []
