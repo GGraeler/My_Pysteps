@@ -16,7 +16,7 @@ def max_value(val):
 	return R.valid, maximum
 
 	
-data_list = ldm_ingest(f'/usr1/home/nas-qnap/MRMS/mrms_sw/{year}/06/*', vars='PrecipRate')
+data_list = ldm_ingest(f'/usr1/home/nas-qnap/MRMS/mrms_sw/{year}/*/*', vars='PrecipRate')
 
 pool = Pool(processes=cpu_count())
 max_time_list = pool.map(max_value, data_list.files)
