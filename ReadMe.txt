@@ -7,4 +7,4 @@ Steps on how to run the code for a selected year over COMET domain:
    4. Cut_Down_FindEventsYearly.py - Finds convective tracks in MRMS data (change line 10 for different year).
    5. (Optional) combine_csv.py - Combines the daily CSV track files into a yearly track file.
 
-Change the file path if running on a different system. Create a new 'pysteps' enviornment on OS before executing this program. To recieve all tracks over CONUS, use ReadIn.py and FindEventsYearly.py. No other files need to be executed to run full program. Certain functions have been added/remved from TDATing to aid in COMET reseach.
+Change the file path if running on a different system. Create a new 'pysteps' enviornment on OS before executing this program. To recieve all tracks over CONUS, use ReadIn.py and FindEventsYearly.py. No other files need to be executed to run full program. Certain functions have been added/remved from T-DaTing to aid in COMET reseach.
